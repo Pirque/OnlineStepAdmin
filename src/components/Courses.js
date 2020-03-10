@@ -9,8 +9,9 @@ import { Helmet } from 'react-helmet';
 import Page from './Page'; 
 import { Header } from 'semantic-ui-react';
 import DraggableTableRow from './DraggableTableRow';
-import QpageModal from './QpageModal';
+//import QpageModal from './QpageModal';
 import PageForm from './PageForm';
+import AddPage from './AddPage';
 //import UserInfo from './UserInfo';
 
 const TOTAL_PER_PAGE = 10;
@@ -28,7 +29,9 @@ class Courses extends React.Component {
       chosen_page: {},
       pageno: 0,
       totalPages: 0,
-      pageModalIsOpen: false
+      //pageModalIsOpen: false
+      showEditPageModal: false,
+      showAddPageModal: false
     };
     this.incrementPage = this.incrementPage.bind(this);
     this.decrementPage = this.decrementPage.bind(this);
@@ -38,7 +41,8 @@ class Courses extends React.Component {
     this.getChapters = this.getChapters.bind(this);
     this.getPages = this.getPages.bind(this);
     this.handleClick = this.handleClick.bind(this);
-    this.closePageModal = this.closePageModal.bind(this);
+    this.closeEditPageModal = this.closeEditPageModal.bind(this);
+    this.closeAddPageModal = this.closeAddPageModal.bind(this);
   }
 
   componentDidMount() {
@@ -223,14 +227,24 @@ class Courses extends React.Component {
     });
   }
 
-  closePageModal() {
+  closeEditPageModal() {
     this.setState({
-      pageModalIsOpen: false
-   });
+      showEditPageModal: false
+    });
+    const {chosen_chapter} = this.state
+    this.getPages(chosen_chapter)
  }
 
+ closeAddPageModal() {
+  this.setState({
+    showAddPageModal: false
+  });
+  const {chosen_chapter} = this.state
+  this.getPages(chosen_chapter)
+}
+
   render() {
-    const { courses, pageno, totalPages, chapters, chosen_course, chosen_chapter, pages, chosen_page, pageModalIsOPen} = this.state;
+    const { courses, pageno, totalPages, chapters, chosen_course, chosen_chapter, pages, showEditPageModal, showAddPageModal} = this.state;
     const startIndex = pageno * TOTAL_PER_PAGE;
 
     return (
@@ -319,6 +333,12 @@ class Courses extends React.Component {
         </>}
         {pages.length !== 0 && <>
          <Header as='h2'> Pages in chapter {chosen_chapter.name} </Header> 
+         <Modal closeIcon onClose={this.closeAddPageModal} open={showAddPageModal} trigger= { <Button onClick={() => this.setState({ showAddPageModal: true })}>Add page</Button> }>
+         <Header as='h2'> Pages within subject {chosen_chapter.subject} </Header> 
+          <Modal.Content>
+		        <AddPage subject={chosen_chapter.subject} closeModal={this.closeAddPageModal}></AddPage>
+		      </Modal.Content>
+		     </Modal>
          <Table celled striped>
           <Table.Header>
             <Table.Row>
@@ -331,10 +351,11 @@ class Courses extends React.Component {
               //<Table.Row key={chapter._id}>
             
               <DraggableTableRow key={page._id} i={i} action={this.swapPages.bind(this)}> 
-                <Modal trigger= { <Table.Cell> {page.title} </Table.Cell> } closeIcon>
+                {/* <Modal trigger= { <Table.Cell> {page.title} </Table.Cell> } closeIcon> */}
+                <Modal closeIcon onClose={this.closeEditPageModal} open={showEditPageModal} trigger= { <Table.Cell onClick={() => this.setState({ showEditPageModal: true })}> {page.title} </Table.Cell> }>
                   <Header icon='edit' content='Edit page' />
 		              <Modal.Content>
-		               <PageForm page={page}></PageForm>
+		               <PageForm page={page} closeModal={this.closeEditPageModal}></PageForm>
 		              </Modal.Content>
 		            </Modal>
                 <Table.Cell>
@@ -347,12 +368,12 @@ class Courses extends React.Component {
           </Table.Body> 
         </Table>
         </>}
-        { pageModalIsOPen && 
+        {/* { pageModalIsOPen && 
         <>
         <Button>test</Button>
         <QpageModal name="TestProp" pg={chosen_page} showPageModal={true} closeModal={() => this.closePageModal()}/>
         </>
-        }
+        } */}
       </Page>
     );
   }

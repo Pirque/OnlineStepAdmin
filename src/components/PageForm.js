@@ -13,8 +13,11 @@ class PageForm extends Component {
         type: this.props.page.type,
         title: this.props.page.title,
         sentence: this.props.page.content.sentence,
-        missingWords: this.props.page.content.missingWords
+        missingWords: this.props.page.content.missingWords,
+        author: this.props.page.author,
+        content: this.props.page.content
     }
+    this.handleMissing = this.handleMissing.bind(this);
   }
 
      
@@ -41,21 +44,32 @@ class PageForm extends Component {
       this.setState( {sentence : updatedSentence })
     }
 
+    handleMissing = missWord => {
+      const missWords = new Array(missWord)
+      console.log("PF missWords" + missWords)
+      console.log("PF missWord" + missWords[0])
+      this.setState( {missingWords : missWords} )
+    }
+
     savePage = () => {
       alert('save')
-      const page = this.state
-      axios.post(`/pages/${page._id}`, {
-        title: page.title,
-        missingWords: page.missingWords,
-        sentence: page.sentence
+      // const page = this.state
+      const {_id, type, title, sentence, missingWords, author} = this.state
+        axios.put(`/pages/${_id}`, {
+        type:type,
+	      title:title,
+	      author: author,
+      	content: {
+		       sentence:sentence,
+           missingWords: missingWords
+         }
       })
       .then((response) => {
         console.log(response);
+        this.props.closeModal()
       }, (error) => {
         console.log(error);
       });
-
-      alert(page.title + " " + page.sentence)
     }
 
     render(){
@@ -68,6 +82,7 @@ class PageForm extends Component {
             return <ClozePage
                     handleChange = {this.handleChange}
                     handleSentence = {this.handleSentence}
+                    handleMissing = {this.handleMissing}
                     page={existing_page}
                     savePage = {this.savePage}
                     />

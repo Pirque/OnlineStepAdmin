@@ -4,14 +4,18 @@ import MissingWords from './MissingWords';
 class ClozePage extends Component{
     constructor(props) {
         super(props);
-        const wordsInSentence = this.props.page.sentence.split(" ")
-        const missingWord = this.props.page.missingWords[0]
+        // const wordsInSentence = this.props.page.sentence.split(" ")
+        const wordsInSentence = this.props.page.content.sentence.split(" ")
+        //const missingWord = this.props.page.missingWords[0]
+        const missingWord = this.props.page.content.missingWords[0]
         const index_missing = wordsInSentence.indexOf(missingWord)
         this.state = {
-            sentence: this.props.page.sentence,
+            // sentence: this.props.page.sentence,
+            sentence: this.props.page.content.sentence,
             words: wordsInSentence,
             //sentence: this.props.page.content.sentence,
-            missingWords: this.props.page.missingWords,
+            // missingWords: this.props.page.missingWords,
+            missingWords: this.props.page.content.missingWords,
             idx_missing: index_missing,
             id_missing:""
         };
@@ -37,6 +41,9 @@ class ClozePage extends Component{
           idx_missing: e.target.value
           })
           alert("ET" + e.target.value)
+          const {words} = this.state
+          console.log("Word missing in updateMissing in Cloze" + words[e.target.value])
+          this.props.handleMissing(words[e.target.value])
       }
 
    
@@ -72,7 +79,7 @@ class ClozePage extends Component{
      
         return(
             <Form >
-                <h1 className="ui centered">Enter User Details</h1>
+                {/* <h3 className="ui centered">Enter a sentence and choose the missing word</h3> */}
                 <Form.Field>
                     <label>Title</label>
                     <input
@@ -89,13 +96,13 @@ class ClozePage extends Component{
                     //onChange={this.handleSentenceChange('sentence', this.sentenceCallback)}
                     onChange={this.handleSentenceChange('sentence')}
                     //defaultValue={page.sentence}
-                    defaultValue={page.sentence}
+                    defaultValue={page.content.sentence}
                     />
                 </Form.Field>
                 <label>Words to remove</label>
                 {console.log("Under label " + words)}
                 {/* <MissingWords sentence={sentence} missingWords={missingWords}></MissingWords> */}
-                <MissingWords missingWord={page.missingWords[0]} words={words} idx_missing={idx_missing} id_missing={id_missing} updateMissing={this.updateMissing}></MissingWords>
+                <MissingWords missingWord={page.content.missingWords[0]} words={words} idx_missing={idx_missing} id_missing={id_missing} updateMissing={this.updateMissing}></MissingWords>
                 
                 <Button onClick={this.savePage}>Save </Button>
             </Form>

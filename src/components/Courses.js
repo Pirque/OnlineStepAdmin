@@ -370,18 +370,7 @@ setClickedPageRow(pageId) {
         <div class="three wide column">
         {pages.length !== 0 && <>
          <Header as='h2'> Pages in chapter {chosen_chapter.name} </Header> 
-         <Modal closeIcon onClose={this.closeAddPageModal} open={showAddPageModal} trigger= { <Button onClick={() => this.setState({ showAddPageModal: true })}>Add page from page library</Button> }>
-         <Header as='h2'> Pages within subject {chosen_chapter.subject} </Header> 
-          <Modal.Content>
-		        <AddPage subject={chosen_chapter.subject} closeModal={this.closeAddPageModal}></AddPage>
-		      </Modal.Content>
-		     </Modal>
-         <Modal closeIcon onClose={this.closeCreatePageModal} open={showCreatePageModal} trigger= { <Button onClick={() => this.setState({ showCreatePageModal: true })}>Create new page</Button> }>
-         <Header as='h2'> Add new page within subject {chosen_chapter.subject} </Header> 
-          <Modal.Content>
-		        <CreatePage chapterId={chosen_chapter._id} subject={chosen_chapter.subject} closeCreatePageModal={this.closeCreatePageModal}></CreatePage>
-		      </Modal.Content>
-		     </Modal>
+         
          <Table celled striped selectable>
           <Table.Header>
             <Table.Row>
@@ -409,7 +398,19 @@ setClickedPageRow(pageId) {
               </DraggableTableRow>
             ))}
           </Table.Body> 
-        </Table>
+                        </Table>
+                        <Modal closeIcon onClose={this.closeAddPageModal} open={showAddPageModal} trigger={<Button className={"ui button styled"} onClick={() => this.setState({ showAddPageModal: true })}>Add page from page library</Button>}>
+                            <Header as='h2'> Pages within subject {chosen_chapter.subject} </Header>
+                            <Modal.Content>
+                                <AddPage subject={chosen_chapter.subject} closeModal={this.closeAddPageModal}></AddPage>
+                            </Modal.Content>
+                        </Modal>
+                        <Modal closeIcon onClose={this.closeCreatePageModal} open={showCreatePageModal} trigger={<Button className={"ui button styled"} onClick={() => this.setState({ showCreatePageModal: true })}>Create new page</Button>}>
+                            <Header as='h2'> Add new page within subject {chosen_chapter.subject} </Header>
+                            <Modal.Content>
+                                <CreatePage chapterId={chosen_chapter._id} subject={chosen_chapter.subject} closeCreatePageModal={this.closeCreatePageModal}></CreatePage>
+                            </Modal.Content>
+                        </Modal>
         </>}
         </div>
         </div>

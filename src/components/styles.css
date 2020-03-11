@@ -2,6 +2,8 @@
   background-color: #90CAF9;
 }
 
-.draggable.clicked {
-  background-color: #90CAF9 !important;
+.ui.button.styled {
+    margin: 8px 0px 8px 0px;
+    background-color: #1976d2;
+    color: white;
 }

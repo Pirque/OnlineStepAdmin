@@ -2,11 +2,9 @@
   "ExpandedNodes": [
     "",
     "\\public",
-    "\\server",
     "\\src",
-    "\\src\\components",
-    "\\src\\components\\Login"
+    "\\src\\components"
   ],
-  "SelectedNode": "\\public",
+  "SelectedNode": "\\src\\components\\Courses.js",
   "PreviewInSolutionExplorer": false
 }

@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
-import { Form, Button } from 'semantic-ui-react';
-//import CreatePage from './CreatePage';
+import { Form, Button, Modal } from 'semantic-ui-react';
+import CreatePage from './CreatePage'
 import axios from 'axios';
 //import Confirmation from './Confirmation';
 
@@ -13,11 +13,7 @@ class AddPage extends Component {
         showCreatePageModal: false
     }
     this.getPages = this.getPages.bind(this);
-    //this.getPages()
-  }
-
-  componentDidMount() {
-    this.getPages();
+    this.getPages()
   }
 
     
@@ -58,9 +54,8 @@ class AddPage extends Component {
     }
 
     render(){
-      //const subject = this.props
-      //const {pages, showCreatePageModal} = this.state
-      const {pages} = this.state
+      const subject = this.props
+      const {pages, showCreatePageModal} = this.state
       const pagesArray = Object.values(pages)
       return  <Form >
       {/* <h3 className="ui centered">Enter a sentence and choose the missing word</h3> */}
@@ -88,11 +83,11 @@ class AddPage extends Component {
                 </li>))}
     
             </ul>
-            {/* <Modal closeIcon onClose={this.closeCreatePageModal} open={showCreatePageModal} trigger= { <Button onClick={() => this.setState({ showCreatePageModal: true })}>Create new page</Button> }>
+            <Modal closeIcon onClose={this.closeCreatePageModal} open={showCreatePageModal} trigger= { <Button onClick={() => this.setState({ showCreatePageModal: true })}>Create new page</Button> }>
             <Modal.Content>
 		          <CreatePage subject={subject} closeModal={this.closeCreatePageModal}></CreatePage>
 		      </Modal.Content>
-		     </Modal>  */}
+		     </Modal> 
       <Button onClick={this.addChosenPages}>Save</Button>
   </Form>
         }

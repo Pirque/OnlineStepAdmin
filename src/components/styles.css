@@ -1,0 +1,7 @@
+.ui.celled.striped.table.clicked {
+  background-color: #90CAF9;
+}
+
+.draggable.clicked {
+  background-color: #90CAF9 !important;
+}

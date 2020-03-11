@@ -5,12 +5,10 @@ class ClozePage extends Component{
     constructor(props) {
         super(props);
         // const wordsInSentence = this.props.page.sentence.split(" ")
-
         const wordsInSentence = this.props.page.content.sentence.split(" ")
         //const missingWord = this.props.page.missingWords[0]
         const missingWord = this.props.page.content.missingWords[0]
         const index_missing = wordsInSentence.indexOf(missingWord)
-    
         this.state = {
             // sentence: this.props.page.sentence,
             sentence: this.props.page.content.sentence,
@@ -38,14 +36,14 @@ class ClozePage extends Component{
     //     alert("index")
     // }
 
-    updateMissing = (e, d) => {
+    updateMissing = (e) => {
         this.setState({
-          idx_missing: d.value
+          idx_missing: e.target.value
           })
-          alert("ET" + d.value)
+          alert("ET" + e.target.value)
           const {words} = this.state
-          console.log("Word missing in updateMissing in Cloze" + words[d.value])
-          this.props.handleMissing(words[d.value])
+          console.log("Word missing in updateMissing in Cloze" + words[e.target.value])
+          this.props.handleMissing(words[e.target.value])
       }
 
    

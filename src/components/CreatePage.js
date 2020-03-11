@@ -1,5 +1,8 @@
 import React, { Component } from 'react';
-import { Form, Button } from 'semantic-ui-react';
+import { Form, Radio, Label, Button } from 'semantic-ui-react';
+import axios from 'axios';
+import CreateClozePage from './CreateClozePage'
+import CreateMcqPage from './CreateMcqPage'
 
 class CreatePage extends Component{
     constructor(props) {
@@ -8,6 +11,14 @@ class CreatePage extends Component{
         this.state = {
             // sentence: this.props.page.sentence,
             subject: this.props.subject,
+            title:"",
+            type:"",
+            sentence:"",
+            missingWords:[],
+            question:"",
+            answers:[],
+            correctAnswer:""
+
             // words: wordsInSentence,
             // //sentence: this.props.page.content.sentence,
             // // missingWords: this.props.page.missingWords,
@@ -18,6 +29,81 @@ class CreatePage extends Component{
         //this.updateMissing = this.updateMissing.bind(this);
       }
 
+
+    setType = (e, d) => {
+      alert(d.value)
+      this.setState( {type: d.value})
+    }
+
+    handleChange = input => event => {
+      this.setState({ [input] : event.target.value })
+    }
+
+    handleSentence = updatedSentence => {
+      this.setState( {sentence : updatedSentence })
+    }
+
+    handleMissing = missWord => {
+      const missWords = new Array(missWord)
+      console.log("PF missWords" + missWords)
+      console.log("PF missWord" + missWords[0])
+      this.setState( {missingWords : missWords} )
+    }
+
+      saveNewPage = () => {
+        const {type, title} = this.state
+        const chapterId = this.props.chapterId
+        alert("Save type "+ type + "title "+ title)
+        switch(type) {
+            case 'cloze': {
+              const {sentence, missingWords} = this.state
+              console.log("Save Sentence " + sentence )
+              console.log("Save misssing Words " + missingWords)
+              axios.post(`/pages`, {
+                type:type,
+                title:title,
+                author: "Test",
+                content: {
+                  sentence:sentence,
+                  missingWords: missingWords
+                 }
+              })
+              //Add page to chapter here - update chapter with new page 
+              .then((response) => {
+                console.log(response);
+                this.props.closeCreatePageModal()
+              }, (error) => {
+                console.log(error);
+              });
+              return
+            }
+            case 'mcq': {
+              const {question, answers, correctAnswer} = this.state
+              axios.post(`/pages`, {
+                type:type,
+                title:title,
+                author: "Test",
+                content: {
+                  question:question,
+                  answers: answers,
+                  correctAnswer: correctAnswer
+                 }
+              })
+              .then((response) => {
+                console.log(response);
+                this.props.closeCreatePageModal()
+              }, (error) => {
+                console.log(error);
+              });
+              return
+            }
+            default:
+                alert("No page to save")
+            }
+
+        }
+  
+     
     // savePage = (e) => {
     //     e.preventDefault()
     //     this.props.savePage()
@@ -57,44 +143,53 @@ class CreatePage extends Component{
     //         });
     // }
 
-    
-    
-
     render() {
-        // const { subject } = this.props;
+        const { type, subject } = this.state;
+
         // const {words, idx_missing, id_missing} = this.state;
         // console.log("Cloze render " + words + "Idx_missing " +idx_missing)
         //person.driver = person.age >=16 ? 'Yes' : 'No';
      
         return(
-            <Form >
-                {<h3 className="ui centered">Create page </h3>}
-                <Form.Field>
-                    <label>Title</label>
-                    <input
-                    placeholder= 'Title'
-                    // onChange={this.props.handleChange('title')}
-                    // defaultValue={page.title}
-                    />
-                </Form.Field>
-                <Form.Field>
-                    <label>Sentence</label>
-                    <input
-                    placeholder='Sentence'
-                    //onChange={this.props.handleChange('sentence')}
-                    //onChange={this.handleSentenceChange('sentence', this.sentenceCallback)}
-                    // onChange={this.handleSentenceChange('sentence')}
-                    // //defaultValue={page.sentence}
-                    // defaultValue={page.content.sentence}
-                    />
-                </Form.Field>
-                {/* <label>Words to remove</label>
-                {console.log("Under label " + words)}
-                {/* <MissingWords sentence={sentence} missingWords={missingWords}></MissingWords> */}
-                {/* <MissingWords missingWord={page.content.missingWords[0]} words={words} idx_missing={idx_missing} id_missing={id_missing} updateMissing={this.updateMissing}></MissingWords> */}
-                 */}
-                <Button onClick={this.savePage}>Save </Button>
-            </Form>
+          <>
+            <Label>Choose type of page to create</Label>
+            <Form>
+             <Form.Field>
+              <Radio
+                label='Cloze test'
+                name='typeGroup'
+                value='cloze'
+                checked={type === 'cloze'}
+                onChange={this.setType}
+             />
+            </Form.Field>
+            <Form.Field>
+              <Radio
+                label='Multiple Choice Question '
+                name='typeGroup'
+                value='mcq'
+                checked={type === 'mcq'}
+                onChange={this.setType}
+              />
+            </Form.Field>
+
+            </Form>  
+            { type === 'cloze' && 
+              <CreateClozePage 
+              subject= {subject} 
+              saveNewPage = {this.saveNewPage} 
+              handleChange = {this.handleChange}
+              handleMissing = {this.handleMissing}
+              handleSentence = {this.handleSentence}>
+              </CreateClozePage>
+            }
+
+            { type === 'mcq' && 
+             <CreateMcqPage subject= {subject} saveNewPage = {this.saveNewPage}></CreateMcqPage>
+            }
+
+            {/* <Button onClick={this.saveNewPage}>Save </Button> */}
+          </>    
         )
     }
 }

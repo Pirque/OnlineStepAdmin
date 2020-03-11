@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { Form, Radio } from 'semantic-ui-react';
 
-class MissingWords extends Component {
+class MissingWordsCreate extends Component {
     // constructor(props) {
     //     super(props);
     //     this.state = {
@@ -55,4 +55,4 @@ class MissingWords extends Component {
     }
 }
 
-export default MissingWords;
+export default MissingWordsCreate;
